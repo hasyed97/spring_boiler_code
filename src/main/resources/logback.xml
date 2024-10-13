@@ -1,0 +1,81 @@
+<configuration>
+   <springProperty name="springLoggingLevel" scope="context" source="application.logging.level"/>
+    <springProperty name="springRollingFile" scope="context" source="application.logging.rolling.file"/>
+    <springProperty name="springRollingFileMaxHistory" scope="context" source="application.logging.rolling.file.max.history"/>
+    <springProperty name="springRollingFileMaxSize" scope="context" source="application.logging.rolling.file.max.size"/>
+    <springProperty name="springLoggingPattern" scope="context" source="application.logging.pattern"/>
+
+
+
+    <springProfile name="dev">
+        <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+            <layout class="ch.qos.logback.classic.PatternLayout">
+                <Pattern>${springLoggingPattern}</Pattern>
+            </layout>
+        </appender>
+
+
+        <appender name="fout" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>${springRollingFile}}</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>${springRollingFile}</fileNamePattern>
+                <maxHistory>${springRollingFileMaxHistory}</maxHistory>
+                <totalSizeCap>${springRollingFileMaxSize}</totalSizeCap>
+            </rollingPolicy>
+            <encoder>
+                <Pattern>${springLoggingPattern}</Pattern>
+            </encoder>
+        </appender>
+
+        <root level="${springLoggingLevel}">
+            <appender-ref ref="stdout"/>
+            <appender-ref ref="fout"/>
+            <!--        <appender-ref ref="SYSLOG"/>-->
+        </root>
+    </springProfile>
+    <springProfile name="prd">
+        <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+                <layout class="za.co.fnb.hybridchat.configs.MaskingPatternLayout">
+<!--                    <maskPattern>"body":\{([^$}]+)\}</maskPattern>-->
+<!--                    <maskPattern>"customer"\s*:\s*\{([^$}]*)\}</maskPattern>-->
+<!--                    <maskPattern>"additionalDetail"\s*:\s*\{([^$}]*)\}</maskPattern>-->
+<!--                    <maskPattern>"senderName"\s*:\s*"([^"]*)"</maskPattern>-->
+<!--                    <maskPattern>"firstName"\s*:\s*"([^"]*)"</maskPattern>-->
+<!--                    <maskPattern>"lastName"\s*:\s*"([^"]*)"</maskPattern>-->
+<!--                    <maskPattern>"name"\s*:\s*"([^"]*)"</maskPattern>-->
+                    <Pattern>
+                        ${springLoggingPattern}
+                    </Pattern>
+                </layout>
+            </encoder>
+        </appender>
+
+
+        <appender name="fout" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>${springRollingFile}}</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>${springRollingFile}</fileNamePattern>
+                <maxHistory>${springRollingFileMaxHistory}</maxHistory>
+                <totalSizeCap>${springRollingFileMaxSize}</totalSizeCap>
+            </rollingPolicy>
+            <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+                <layout class="za.co.fnb.hybridchat.configs.MaskingPatternLayout">
+<!--                    <maskPattern>"body":\{([^$}]+)\}</maskPattern>-->
+<!--                    <maskPattern>"customer"\s*:\s*\{([^$}]*)\}</maskPattern>-->
+<!--                    <maskPattern>"additionalDetail"\s*:\s*\{([^$}]*)\}</maskPattern>-->
+<!--                    <maskPattern>"senderName"\s*:\s*"([^"]*)"</maskPattern>-->
+                    <Pattern>
+                        ${springLoggingPattern}
+                    </Pattern>
+                </layout>
+            </encoder>
+        </appender>
+        <root level="${springLoggingLevel}">
+            <appender-ref ref="stdout"/>
+            <appender-ref ref="fout"/>
+            <!--        <appender-ref ref="SYSLOG"/>-->
+        </root>
+    </springProfile>
+
+</configuration>
